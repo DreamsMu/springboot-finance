@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mhx.finance.dao.CapitalMapper">
+    <select id="getCapital" parameterType="String" resultType="com.mhx.finance.domain.Capital">
+        SELECT * FROM `capital` WHERE capital.family_id = #{family_id}
+    </select>
+
+    <update id="setCapital" parameterType="com.mhx.finance.domain.Capital">
+        UPDATE
+            `capital`
+        SET
+            capital.total = #{total},
+            capital.debt = #{debt}
+        WHERE
+            capital.family_id = #{family_id}
+    </update>
+
+    <update id="setCapitalExpend" parameterType="com.mhx.finance.domain.Capital">
+        UPDATE
+            `capital`
+        SET
+            capital.total = #{total},
+            capital.expend = #{expend}
+        WHERE
+            capital.family_id = #{family_id}
+    </update>
+
+    <update id="setCapitalIncome" parameterType="com.mhx.finance.domain.Capital">
+        UPDATE
+            `capital`
+        SET
+            capital.total = #{total},
+            capital.income = #{income}
+        WHERE
+            capital.family_id = #{family_id}
+    </update>
+
+    <update id="setCapitalDebt" parameterType="com.mhx.finance.domain.Capital">
+        UPDATE
+            `capital`
+        SET
+            capital.debt = #{debt}
+        WHERE
+            capital.family_id = #{family_id}
+    </update>
+
+    <insert id="insertCaptial" parameterType="String">
+        insert into capital (family_id) values (#{family_id})
+    </insert>
+</mapper>

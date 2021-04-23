@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mhx.finance.dao.IncomeMapper">
+    <select id="getIncomeAll" parameterType="String" resultType="com.mhx.finance.domain.Income">
+        SELECT * FROM `income` WHERE family_id = #{family_id} ORDER BY id DESC
+    </select>
+
+    <select id="getIncomeId" resultType="com.mhx.finance.domain.Income">
+        SELECT * FROM `income` WHERE id = #{id}
+    </select>
+
+    <update id="setIncome" parameterType="com.mhx.finance.domain.Income">
+        update
+            `income`
+        SET
+            name = #{name},
+            price = #{price},
+            way = #{way},
+            date = #{date}
+        WHERE
+            id = #{id}
+    </update>
+
+    <delete id="delIncome" parameterType="Integer">
+        DELETE FROM `income` WHERE id = #{id}
+    </delete>
+
+    <select id="getIncomeExpend" parameterType="String" resultType="com.mhx.finance.domain.Income">
+        (SELECT name,price,way,date,family_id,mold FROM income WHERE family_id= #{family_id} )
+        UNION (SELECT name,price,way,date,family_id,mold FROM expend WHERE family_id= #{family_id} )
+        ORDER BY date DESC
+    </select>
+
+    <select id="getIncomeForYear" parameterType="String" resultType="com.mhx.finance.domain.Income">
+        select * FROM income
+        where date between date_sub(now(),interval 12 month) and now() and family_id = #{ family_id };
+    </select>
+
+    <select id="getIncomeWay" parameterType="String" resultMap="getIncomeWayMap">
+        SELECT count(way) as `value`,way from income where date between date_sub(now(),interval 12 month) and now() and family_id = #{family_id} GROUP BY way
+    </select>
+
+    <resultMap id="getIncomeWayMap" type="com.mhx.finance.domain.Income">
+        <result column="value" property="mold" />
+        <result column="way" property="way" />
+    </resultMap>
+
+    <insert id="insertIncomeData" parameterType="com.mhx.finance.domain.Income">
+        insert into income (name,price,way,date,family_id) values (#{name}, #{price}, #{way}, #{date}, #{family_id})
+    </insert>
+</mapper>

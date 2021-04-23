@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mhx.finance.dao.ExpendMapper">
+    <select id="getExpendAll" parameterType="String" resultType="com.mhx.finance.domain.Expend">
+        SELECT * FROM `expend` WHERE family_id = #{ family_id } ORDER BY id DESC
+    </select>
+
+    <select id="getExpendId" parameterType="Integer" resultType="com.mhx.finance.domain.Expend">
+        SELECT * FROM `expend` WHERE id = #{id}
+    </select>
+
+    <update id="setExpend" parameterType="com.mhx.finance.domain.Expend">
+        update
+            `expend`
+        SET
+            expend.name = #{name},
+            expend.price = #{price},
+            expend.way = #{way},
+            expend.payway = #{payway},
+            expend.date = #{date}
+        WHERE
+            expend.id = #{id}
+    </update>
+
+    <delete id="delExpend" parameterType="Integer">
+        DELETE FROM `expend` WHERE id = #{id}
+    </delete>
+
+    <select id="getExpendForYear" parameterType="String" resultType="com.mhx.finance.domain.Expend">
+        select * FROM expend
+        where date between date_sub(now(),interval 12 month) and now() and family_id = #{ family_id };
+    </select>
+
+    <select id="getExpendPayway" parameterType="String" resultMap="getExpendPaywayMap">
+        SELECT count(payway) as `value`,payway from expend where date between date_sub(now(),interval 12 month) and now() and family_id = #{family_id} GROUP BY payway
+    </select>
+
+    <resultMap id="getExpendPaywayMap" type="com.mhx.finance.domain.Expend">
+        <result column="value" property="mold" />
+        <result column="payway" property="payway" />
+    </resultMap>
+
+    <select id="getExpendWay" parameterType="String" resultMap="getExpendWayMap">
+        SELECT sum(price) as `value`,way from expend where date between date_sub(now(),interval 12 month) and now() and family_id = #{family_id} GROUP BY way ORDER BY `value` ASC
+    </select>
+
+    <resultMap id="getExpendWayMap" type="com.mhx.finance.domain.Expend">
+        <result column="value" property="price" />
+        <result column="way" property="way" />
+    </resultMap>
+
+    <insert id="insertExpendData" parameterType="com.mhx.finance.domain.Expend">
+        insert into expend (name,price,way,payway,date,family_id) values (#{name}, #{price}, #{way}, #{payway}, #{date}, #{family_id})
+    </insert>
+</mapper>

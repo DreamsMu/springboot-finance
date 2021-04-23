@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mhx.finance.dao.UserMapper">
+    <select id="getUserAll" resultType="com.mhx.finance.domain.User">
+        SELECT * FROM `user`
+    </select>
+
+    <select id="getUser" parameterType="String" resultType="com.mhx.finance.domain.User">
+        SELECT * FROM `user` WHERE user.family_id = #{family_id}
+    </select>
+
+    <select id="getUserId" parameterType="com.mhx.finance.domain.User" resultType="com.mhx.finance.domain.User">
+        select * from user,capital WHERE user.family_id = capital.family_id and user.family_id = #{family_id} and user.id = #{id}
+    </select>
+
+    <update id="setUser" parameterType="com.mhx.finance.domain.User">
+        UPDATE
+            `user`
+        SET
+            user.name = #{name},
+            user.username = #{username},
+            user.password = #{password},
+            user.power = #{power}
+        WHERE
+            user.id = #{id}
+    </update>
+
+    <insert id="insertUser" parameterType="com.mhx.finance.domain.User">
+        insert into user (name, username, password,power,master,family_id) values(#{name},#{username},#{password},#{power},#{master},#{family_id})
+    </insert>
+
+    <select id="findByUsername" parameterType="String" resultType="com.mhx.finance.domain.User">
+        SELECT * FROM `user` WHERE user.username = #{username}
+    </select>
+</mapper>
